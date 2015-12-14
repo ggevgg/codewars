@@ -1,0 +1,76 @@
+function DocumentParser(reader) {
+	this.reader = reader;
+	this.reset();
+}
+
+DocumentParser.prototype.reset = function() {
+	this.wordCount = 0;
+	this.charCount = 0;
+	this.lineCount = 0;
+};
+
+DocumentParser.prototype.parse = function() {
+  var buf = '';
+	var posSpace = -1;
+	var posEndString = -1;
+	var end = false;
+	this.lineCount = 1;
+
+	while (!end) {
+		while(!(~ (posSpace = buf.indexOf(' '))) && !(~ (posEndString = buf.indexOf('\n'))) && !end) {
+		  var newBuf = this.reader.getChunk();
+      if (!newBuf) {
+				end = true;
+				this.wordCount++;
+				this.charCount += buf.length;
+			}
+			buf += newBuf;
+      if(buf === ' ') {buf = ''; posSpace = -1; this.charCount +=2}
+      console.log('new buf:', newBuf.length);
+		} 
+		console.log('new buf:', buf);
+    if (!buf) {
+      console.log('no buf');
+      end = true;
+      if (this.wordCount) this.wordCount--;
+      if (this.charCount) this.charCount--;
+    }
+		if (~posSpace && !end) {
+			var word = buf.slice(0, posSpace);
+			buf = buf.slice(posSpace + 1);
+			this.wordCount++;
+			this.charCount += word.length + 1;
+		}
+		if (~posEndString) {
+			var word = buf.slice(0, posEndString);
+			buf = buf.slice(posEndString + 1);
+			this.wordCount++;
+			this.charCount += word.length + 1;
+			this.lineCount++;
+		}
+
+
+	}
+if (!this.charCount) this.lineCount = 0;
+
+};
+
+
+function FileReaderSimulator(text) {
+	var index = -1;
+	this.getChunk = function()
+	{
+		index++;
+		return index == text.length ? "" : text.charAt(index);
+	};
+}
+
+var fileContent = "Once upon a time\nOnce time\nnew one",
+reader = new FileReaderSimulator(fileContent),
+parser = new DocumentParser(reader);
+
+parser.parse();
+
+console.log('char:', parser.charCount);//, 16);
+console.log('word', parser.wordCount);//, 4);
+console.log('line', parser.lineCount);//, 1);
