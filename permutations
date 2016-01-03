@@ -1,0 +1,65 @@
+function rec(arr) {
+	var res=[];
+	function inn(arr1, l) {
+		var s='';
+		if (arr1.length >= 1) {
+			for (var i = 0; i < arr1[0].length; i++) {
+				s = l+ arr1[0][i];
+				s += inn(arr1.slice(1), s);
+				if (s.length === arr.length) res.push(s);
+			} 
+		} else return '';
+		return '';
+	}
+	inn(arr, '');
+	return res;
+}
+
+console.log(rec([[3, 6, 2], [6, 3, 9, 5], [9, 6, 8]]));
+
+
+
+
+/*
+function power(arr, n) {
+	var r=[];
+	function generate(k) {
+		if (k === n) {
+			s='';
+			for (var i = 0; i < n; i++) s+=x[i];
+			if (!(~r.indexOf(s))) r.push(s);
+		} else {
+			for (var j = 0; j < m; j++) {
+				x[k] = arr[j];
+				generate(k+1);
+			}
+		}
+	}
+
+
+	var x = [];
+	var m = arr.length;
+	generate(0);
+	return r;
+}*/
+
+
+
+
+
+
+
+/*	function perm(arr) {
+    if (arr.length > 1) {
+        var beg = arr[0];
+        var arr1 = perm(arr.slice(1));
+        var arr2 = [];
+        var l =  arr1[0].length;
+        for(var i=0; i < arr1.length; i++) 
+            for(var j=0; j <= l; j++) 
+                arr2.push(arr1[i].slice(0, j).concat(beg, arr1[i].slice(j)));
+        return arr2;
+    } else return [arr];
+}*/
+
+
